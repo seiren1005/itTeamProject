@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.globalin.mapper.boardMapper">
+
+	<!-- Implement insert method at BoardMapper interface -->	
+	<insert id="insert">
+		INSERT INTO tbl_board(bno, title, content, writer)
+		VALUES (seq_tbl_board.NEXTVAL, #{title}, #{content}, #{writer})
+	</insert>
+	<!-- /.Implement insert method at BoardMapper interface -->
+	
+	
+	<!-- Implement selectOne method at BoardMapper interface -->
+	<select id="selectOne" resultType="com.globalin.domain.BoardVO">
+		SELECT *
+		FROM tbl_board
+		WHERE bno = #{bno}	
+	</select>
+	<!-- /.Implement selectOne method at BoardMapper interface -->
+	
+	
+	<!-- Implement selectAll method at BoardMapper interface -->
+	<select id="selectAll" resultType="com.globalin.domain.BoardVO">
+		<![CDATA[
+			SELECT *
+			FROM tbl_board
+			WHERE bno > 0
+		]]>
+	</select>
+	<!-- /.Implement selectAll method at BoardMapper interface -->
+	
+	
+	<!-- Implement update method at BoardMapper interface -->
+	<update id="update">
+		UPDATE tbl_board
+		SET title = #{title},
+			content = #{content},
+			writer = #{writer},
+			moddate = SYSDATE
+		WHERE bno = #{bno}
+	</update>
+	<!-- /.Implement update method at BoardMapper interface -->
+	
+	
+	<!-- Implement delete method at BoardMapper interface -->
+	<delete id="delete">
+		DELETE
+		FROM tbl_board
+		WHERE bno = #{bno}
+	</delete>
+	<!-- /.Implement delete method at BoardMapper interface -->
+	
+	
+
+</mapper>

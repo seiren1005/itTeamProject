@@ -1,0 +1,49 @@
+===========================================
+22-05-16 Mon
+===========================================
+1. 팀 프로젝트 용 DB 생성하기
+	databaseDesigns.sql 파일 참조
+
+
+1. 게시판 글을 저장하기 위한 테이블/시퀀스 생성
+	databaseDesigns.sql 파일 참조
+
+
+3. DB 에 접속하기 위한 정보를 root-context.xml 파일에 추가
+	Add <!-- Information about connecting DB -->
+
+
+4. BoardMapper.java interface 파일에
+	CRUD 에 필요한 SQL 문 메서드만 선언하고
+	boardMapper.xml 파일에서 구현
+
+
+5. BaordMapper.java 파일과 boardMapper.xml 파일을 이어주기
+	BoardService.java interface 파일을 생성해서 필요한 메서드를 선언한 뒤
+	BoardServiceImpl.java class 파일에서 구현
+
+
+1. 게시판 웹 페이지 생성
+	1) 전체 글
+	2) 추가
+	3) 선택한 글
+	4) 게시글 수정
+
+
+2. 웹 페이지에서 공통 부분 분리
+	1) header 분리
+	2) footer 분리
+
+
+3. 서버 실행시 path를 / 로 수정
+
+
+4. web.xml 파일 수정
+
+
+5. BoardController.java 에서
+	/board/list 요청이 들어오면 리스트 페이지로 이동하도록 처리
+
+	@GetMapping 사용하려면 springframework 버전 5.0.7.RELEASE 로 수정
+
+	
