@@ -53,3 +53,72 @@ CYCLE;
 
 
 COMMIT;
+
+
+DROP TABLE tbl_board;
+
+
+DROP SEQUENCE seq_tbl_board;
+
+
+COMMIT;
+
+
+CREATE TABLE tbl_board(
+	bno NUMBER(10, 0),
+	title VARCHAR2(200) NOT NULL,
+	content VARCHAR2(2000) NOT NULL,
+	writer VARCHAR2(50) NOT NULL,
+	regdate DATE DEFAULT SYSDATE,
+	moddate DATE DEFAULT SYSDATE
+);
+
+
+ALTER TABLE tbl_board -- 변경하려는 table
+ADD CONSTRAINT pk_tbl_board -- 제약조건 이름
+PRIMARY KEY (bno); -- 제약조건(주려는 컬럼)
+
+
+CREATE SEQUENCE seq_tbl_board
+INCREMENT BY 1
+START WITH 1
+MINVALUE 0
+MAXVALUE 999999999
+CYCLE;
+
+
+CREATE TABLE tbl_reply (
+	rno NUMBER(10, 0),
+	bno NUMBER(10, 0) NOT NULL,
+	reply VARCHAR2(1000) NOT NULL,
+	replyer VARCHAR2(50) NOT NULL,
+	replyregdate DATE DEFAULT SYSDATE,
+	replymoddate DATE DEFAULT SYSDATE
+);
+
+DROP TABLE tbl_reply;
+DROP SEQUENCE seq_tbl_reply;
+
+CREATE SEQUENCE seq_tbl_reply
+MINVALUE 1
+MAXVALUE 999999999
+INCREMENT BY 1
+START WITH 1
+CYCLE;
+
+
+ALTER TABLE tbl_reply
+ADD CONSTRAINT pk_reply PRIMARY KEY (rno);
+
+
+ALTER TABLE tbl_reply
+ADD CONSTRAINT fk_reply_board FOREIGN KEY (bno)
+REFERENCES tbl_board (bno);
+
+
+COMMIT;
+
+
+ALTER TABLE tbl_board
+ADD (replycnt NUMBER DEFAULT 0);
+
