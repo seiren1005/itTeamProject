@@ -5,7 +5,7 @@
 	<!-- insert method at ReplyMapper -->
 	<insert id="insert">
 		INSERT INTO tbl_reply(rno, bno, reply, replyer)
-		VALUES(seq_tbl_reply.NEXTVAL, #{bno}, #{reply}, #{replyer})
+		VALUES(seq_reply.NEXTVAL, #{bno}, #{reply}, #{replyer})
 	</insert>	
 	<!-- /.insert method at ReplyMapper -->
 	
@@ -22,8 +22,8 @@
 	<!-- selectAllWithPaging method at ReplyMapper -->
 	<select id="selectAllWithPaging" resultType="com.globalin.domain.ReplyVO">
 		<![CDATA[
-			SELECT rno
-			FROM (SELECT /*+ INDEX(tbl_reply idx_reply) */
+			SELECT rno, bno, reply, replyer, replyregdate, replymoddate
+			FROM (SELECT /*+ INDEX(tbl_reply pk_reply) */
 						rownum rn, rno, bno, reply, replyer, replyregdate, replymoddate
 					FROM tbl_reply
 					WHERE bno = #{bno}

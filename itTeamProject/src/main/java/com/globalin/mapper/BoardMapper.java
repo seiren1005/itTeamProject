@@ -24,6 +24,9 @@ public interface BoardMapper {
 	// list with page
 	public List<BoardVO> selectAllWithPage(Criteria cri);
 	
+	// list with page
+	public List<BoardVO> selectAllWithPagePurp(Criteria cri, String purp);
+	
 	// Update
 	public int update(BoardVO bvo);
 		
@@ -32,6 +35,9 @@ public interface BoardMapper {
 	
 	// Get total count
 	public int getTotalCount(Criteria cri);
+	
+	// Get total count
+	public int getTotalCountPurp(Criteria cri, String purp);
 	
 	// Update reply count
 	public void updateReplyCnt(@Param("bno") int bno,

@@ -19,6 +19,9 @@ public interface BoardService {
 	// select all contents with page processing
 	public List<BoardVO> getList(Criteria cri);
 	
+	// select all contents with page processing
+	public List<BoardVO> getList(Criteria cri, String purp);
+	
 	// modify a content
 	public boolean modify(BoardVO bvo);
 	
@@ -27,5 +30,8 @@ public interface BoardService {
 	
 	// Get total count at board
 	public int getTotal(Criteria cri);
+	
+	// Get total count at board
+	public int getTotal(Criteria cri, String purp);
 	
 }

@@ -27,7 +27,7 @@
 						</when>
 						
 						<!-- Search in content -->
-						<when test="searchType == 'C'toString()">
+						<when test="searchType == 'C'.toString()">
 							content LIKE '%'||#{keyword}||'%'
 						</when>
 						
@@ -39,17 +39,39 @@
 				</trim>
 			</foreach>
 		</trim>
+		
 		<!-- /.Insert SQL according to searchType -->
 		 
 	</sql>
 	
+	
+	<sql id="purp">
+	
+		<!-- Insert SQL according to searchType -->
+		<trim prefix="(" suffix=") AND " prefixOverrides="AND">
+			<trim prefix="AND">
+				<choose>
+					<when test="purp == '/'.toString()"></when>
+					<when test="purp == '/qna'.toString()">
+						purpose = 'Q'
+					</when>
+					<when test="purp == '/free'.toString()">
+						purpose = 'F'
+					</when>
+				</choose>			
+			</trim>
+		</trim>
+		<!-- /.Insert SQL according to searchType -->
+		 
+	</sql>
+			
 	<!-- /.SQL template -->
 	
 	
 	<!-- Implement insert method at BoardMapper interface -->	
 	<insert id="insert">
-		INSERT INTO tbl_board(bno, title, content, writer)
-		VALUES (seq_tbl_board.NEXTVAL, #{title}, #{content}, #{writer})
+		INSERT INTO tbl_board(bno, purpose, title, content, writer, secret)
+		VALUES (seq_board.NEXTVAL, #{purpose}, #{title}, #{content}, #{writer}, #{secret})
 	</insert>
 	<!-- /.Implement insert method at BoardMapper interface -->
 	
@@ -58,13 +80,13 @@
 	<insert id="insertSelectKey">
 		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
 		<!-- order "BEFORE" 가 선언된 tag 내의 sql 문에 우선순위를 줌 -->
-			SELECT seq_tbl_board.NEXTVAL
+			SELECT seq_board.NEXTVAL
 			FROM dual
 			<!-- dual 은 가상 테이블 -->
 		</selectKey>
 		
-		INSERT INTO tbl_board(bno, title, content, writer)
-		VALUES(#{bno}, #{title}, #{content}, #{writer})
+		INSERT INTO tbl_board(bno, purpose, title, content, writer, secret)
+		VALUES(#{bno}, #{purpose}, #{title}, #{content}, #{writer}, #{secret})
 	</insert>
 	
 	
@@ -91,13 +113,32 @@
 	<!-- Implement selectAll page processed method at BoardMapper interface -->
 	<select id="selectAllWithPage" resultType="com.globalin.domain.BoardVO">
 	<![CDATA[
-		SELECT bno, title, content, writer, regdate, moddate, replycnt
+		SELECT bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
 		FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
-					rownum rn, bno, title, content, writer, regdate, moddate, replycnt
+					rownum rn, bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
 				FROM tbl_board
 				WHERE
 	]]>
 		<include refid="criteria"></include>
+	<![CDATA[	
+					rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum} - 1) * #{amount}			
+	]]>	
+	</select>	
+	<!-- /.Implement selectAll page processed method at BoardMapper interface -->
+	
+	
+	<!-- Implement selectAll page processed method at BoardMapper interface -->
+	<select id="selectAllWithPagePurp" resultType="com.globalin.domain.BoardVO">
+	<![CDATA[
+		SELECT bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
+		FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
+					rownum rn, bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
+				FROM tbl_board
+				WHERE
+	]]>
+		<include refid="criteria"></include>
+		<include refid="purp"></include>
 	<![CDATA[	
 					rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum} - 1) * #{amount}			
@@ -121,15 +162,36 @@
 					bno > 0
 		]]>
 	</select>
-	<!-- /.Get total count at board-->	
+	<!-- /.Get total count at board-->
+	
+	
+	<!-- Get total count at board -->
+	<select id="getTotalCountPurp" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM tbl_board	
+			WHERE
+		]]>
+		
+			<!-- Using template -->
+			<include refid="criteria"></include>
+			<include refid="purp"></include>
+		
+		<![CDATA[
+					bno > 0
+		]]>
+	</select>
+	<!-- /.Get total count at board-->		
 	
 	
 	<!-- Implement update method at BoardMapper interface -->
 	<update id="update">
 		UPDATE tbl_board
-		SET title = #{title},
+		SET purpose = #{purpose},
+			title = #{title},
 			content = #{content},
 			writer = #{writer},
+			secret = #{secret},
 			moddate = SYSDATE
 		WHERE bno = #{bno}
 	</update>

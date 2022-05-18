@@ -4,9 +4,11 @@ package com.globalin.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +31,12 @@ public class BoardController {
 	@Autowired
 	private BoardService service;
 	
+	
 	// /board/list get 요청
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
 		
-		log.info("list ");
+//		log.info("list ");
 		
 		model.addAttribute("list", service.getList(cri));
 		
@@ -41,9 +44,82 @@ public class BoardController {
 		int total = service.getTotal(cri);
 		
 		log.info("total: " + total);
-		model.addAttribute("pageMaker", new BoardPage(cri, total));		
+		model.addAttribute("pageMaker", new BoardPage(cri, total));
+	
+	}
+		
+		
+	// /board/list get 요청2
+	@GetMapping(value="/list/{purp}")
+	public String list(Criteria cri, Model model, 
+			@PathVariable("purp") String purp) {
+		
+//		log.info("list ");
+		
+		model.addAttribute("list", service.getList(cri, purp));
+		
+		// page processing
+		int total = service.getTotal(cri, purp);
+		
+		log.info("total: " + total);
+		model.addAttribute("pageMaker", new BoardPage(cri, total));
+		
+		return "redirect:/board/list";
+		
+						
+			
+		
+//		if(purp == "/qna") {
+//			
+//			model.addAttribute("list", service.getList(cri, purp));
+//			
+//			// page processing
+//			int total = service.getTotal(cri, purp);
+//			
+//			log.info("total: " + total);
+//			model.addAttribute("pageMaker", new BoardPage(cri, total));
+//			
+//			return "redirect:/board/list";
+//			
+//		}
+		
 		
 	}
+	
+	
+//	@GetMapping("/list")
+//	public void list(Criteria cri, Model model) {
+//		
+//		log.info("list ");
+//		
+//		model.addAttribute("list", service.getList(cri));
+//		
+//		// page processing
+//		int total = service.getTotal(cri);
+//		
+//		log.info("total: " + total);
+//		model.addAttribute("pageMaker", new BoardPage(cri, total));		
+//		
+//	}
+//	
+//	
+//	@GetMapping(value="/list")
+//	public void list(Criteria cri, Model model) {
+//		
+//		log.info("list ");
+//		
+//		model.addAttribute("list", service.getList(cri));
+//		
+//		// page processing
+//		int total = service.getTotal(cri);
+//		
+//		log.info("total: " + total);
+//		model.addAttribute("pageMaker", new BoardPage(cri, total));		
+//		
+//	}
+	
+	
+	
 	
 	// /board/register get request
 	@GetMapping("/register")

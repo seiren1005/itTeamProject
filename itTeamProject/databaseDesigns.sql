@@ -29,9 +29,11 @@
 -- Create table for board
 CREATE TABLE tbl_board(
 	bno NUMBER(10, 0),
+	purpose VARCHAR2(1) NOT NULL,
 	title VARCHAR2(200) NOT NULL,
 	content VARCHAR2(2000) NOT NULL,
 	writer VARCHAR2(50) NOT NULL,
+	secret VARCHAR2(1),
 	regdate DATE DEFAULT SYSDATE,
 	moddate DATE DEFAULT SYSDATE
 );
@@ -39,12 +41,12 @@ CREATE TABLE tbl_board(
 
 -- 특정 이름으로 제약조건을 주기
 ALTER TABLE tbl_board -- 변경하려는 table
-ADD CONSTRAINT pk_tbl_board -- 제약조건 이름
+ADD CONSTRAINT pk_board -- 제약조건 이름
 PRIMARY KEY (bno); -- 제약조건(주려는 컬럼)
 
 
 -- Create sequence for board number (bno)
-CREATE SEQUENCE seq_tbl_board
+CREATE SEQUENCE seq_board
 INCREMENT BY 1
 START WITH 1
 MINVALUE 0
@@ -58,7 +60,7 @@ COMMIT;
 DROP TABLE tbl_board;
 
 
-DROP SEQUENCE seq_tbl_board;
+DROP SEQUENCE seq_board;
 
 
 COMMIT;
@@ -66,20 +68,22 @@ COMMIT;
 
 CREATE TABLE tbl_board(
 	bno NUMBER(10, 0),
+	purpose CHAR(1) NOT NULL,
 	title VARCHAR2(200) NOT NULL,
 	content VARCHAR2(2000) NOT NULL,
 	writer VARCHAR2(50) NOT NULL,
+	secret VARCHAR2(1),
 	regdate DATE DEFAULT SYSDATE,
 	moddate DATE DEFAULT SYSDATE
 );
 
 
 ALTER TABLE tbl_board -- 변경하려는 table
-ADD CONSTRAINT pk_tbl_board -- 제약조건 이름
+ADD CONSTRAINT pk_board -- 제약조건 이름
 PRIMARY KEY (bno); -- 제약조건(주려는 컬럼)
 
 
-CREATE SEQUENCE seq_tbl_board
+CREATE SEQUENCE seq_board
 INCREMENT BY 1
 START WITH 1
 MINVALUE 0
@@ -97,9 +101,9 @@ CREATE TABLE tbl_reply (
 );
 
 DROP TABLE tbl_reply;
-DROP SEQUENCE seq_tbl_reply;
+DROP SEQUENCE seq_reply;
 
-CREATE SEQUENCE seq_tbl_reply
+CREATE SEQUENCE seq_reply
 MINVALUE 1
 MAXVALUE 999999999
 INCREMENT BY 1
@@ -112,7 +116,7 @@ ADD CONSTRAINT pk_reply PRIMARY KEY (rno);
 
 
 ALTER TABLE tbl_reply
-ADD CONSTRAINT fk_reply_board FOREIGN KEY (bno)
+ADD CONSTRAINT fk_reply FOREIGN KEY (bno)
 REFERENCES tbl_board (bno);
 
 

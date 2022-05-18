@@ -6,10 +6,23 @@ import java.util.Date;
 public class BoardVO {
 
 	private int bno, replyCnt;
-	private String title, content, writer;
+	private String purpose, title, content, writer;
+	private String secret = "P";
 	private Date regDate, modDate;
 	
 	
+	public String getSecret() {
+		return secret;
+	}
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
 	public int getReplyCnt() {
 		return replyCnt;
 	}
@@ -57,7 +70,8 @@ public class BoardVO {
 	@Override
 	public String toString() {
 		return "BoardVO [bno=" + bno + ", replyCnt=" + replyCnt + ", title=" + title + ", content=" + content
-				+ ", writer=" + writer + ", regDate=" + regDate + ", modDate=" + modDate + "]";
+				+ ", writer=" + writer + ", secret=" + secret + ", purpose=" + purpose + ", regDate=" + regDate
+				+ ", modDate=" + modDate + "]";
 	}
 		
 	

@@ -32,10 +32,18 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		log.info("Write: " + rvo);
 		
-		// bno 의 댓글수 +1
-		bMapper.updateReplyCnt(rvo.getBno(), 1);
+		int result = rMapper.insert(rvo);
 		
-		return rMapper.insert(rvo);
+//		System.out.println("reply register retunr: " + result);
+		
+		if (result == 1) {
+			
+			// bno 의 댓글수 +1
+			bMapper.updateReplyCnt(rvo.getBno(), 1);
+			
+		}
+		
+		return result;
 		
 	}
 	
@@ -70,10 +78,16 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		ReplyVO rvo = rMapper.selectOne(rno);
 		
-		// 삭제 시 해당 bno 의 댓글 수 -1
-		bMapper.updateReplyCnt(rvo.getBno(), -1);
+		int result = rMapper.delete(rno);
 		
-		return rMapper.delete(rno);
+		if(result == 1) {
+			
+			// 삭제 시 해당 bno 의 댓글 수 -1
+			bMapper.updateReplyCnt(rvo.getBno(), -1);
+			
+		}
+		
+		return result; 
 		
 	}
 	
@@ -98,6 +112,8 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		rPage.setReplyCnt(rMapper.getCountReplyByBno(bno));
 		rPage.setReplyList(rMapper.selectAllWithPaging(cri, bno));
+			
+//		System.out.println(rPage);
 		
 		return rPage;
 		

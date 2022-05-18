@@ -90,11 +90,17 @@ public class ReplyController {
 	@GetMapping(value="/pages/{bno}/{page}",
 			produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<ReplyPage> getList(
-			@PathVariable("bno") int bno, @PathVariable("page") int page) {
+			@PathVariable("bno") int bno, 
+			@PathVariable("page") int page) {
+		
+//		System.out.println("is getList working?");
+//		System.out.println("controller bno: " + bno);
 		
 		Criteria cri = new Criteria();
 		cri.setPageNum(page);
 		cri.setAmount(10);
+		
+//		System.out.println("controller return: " +service.getReplyListWithPage(cri, bno));
 		
 		return new ResponseEntity<>(
 				service.getReplyListWithPage(cri, bno), HttpStatus.OK);

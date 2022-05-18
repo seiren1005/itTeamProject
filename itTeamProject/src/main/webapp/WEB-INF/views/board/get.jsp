@@ -85,10 +85,11 @@
 			<div class="replyForm">
 				<i class=""></i>
 				<input class="reply_replyer" name="replyer"
-					placeholder="replyer" />
-				<input class="" name="reply" 
-					placeholder="New reply!" />		
+					placeholder="replyer" /> <br>
+				<textarea class="" rows="3" name="reply" 
+					placeholder="New reply!" ></textarea>		
 				<button id="registerReplyBtn" type="button" class="">REGISTER</button>
+				<hr>
 			</div>
 			<!-- /.Register reply form -->
 		
@@ -107,9 +108,8 @@
 		<!-- /.Page button for reply -->
 		
 		<!-- Button for a reply -->
-		<div class="">
-			<button id="updateReplyBtn" type="button" class="">UPDATE</button>
-			<button id="deleteReplyBtn" type="button" class="">REMOVE</button>
+		<div class="chatBtn">
+			
 		</div>
 		<!-- /.Button for a reply -->
 		
@@ -126,10 +126,14 @@
 	
 	/* function for reply */
 	var replyUL = $(".chat");
+	var updateRno = -1;
+	console.log("updateRno 0: " + updateRno);
 	
 	$(document).ready(function() {
 		
 		var bnoValue = '<c:out value="${board.bno}" />';
+		
+		// console.log("bno " + bnoValue);
 		
 		showList(1);
 		
@@ -143,7 +147,7 @@
 					// page 가 있으면 page 값으로 없으면 1 로
 				},
 				function(replyCnt, list) {
-					// success 시 callback ㅎ마수에 replyCnt, list 받아옴
+					// success 시 callback 함수에 replyCnt, list 받아옴
 					console.log("replyCnt: " + replyCnt);
 					console.log("list: " + list);
 					
@@ -166,19 +170,44 @@
 						// exit function
 					}
 					
+					/* 댓글 리스트 (리스트 보기 + 수정) */
+					
+					
 					// exist reply
 					for (let i = 0; i < list.length; i++) {
 						
-						comments += "<li class='' data-rno='" + list[i].rno + "'>";
+						comments += "<li class='replyLiTag' data-rno='" + list[i].rno + "'>";
 						comments += "<div>";
 						comments += "<div class=''>";
-						comments += "<string class=''>" + list[i].replyer + "</strong>";
+						comments += list[i].rno;
+						comments += ". <strong class='replyReplyerInfo'>" + list[i].replyer + "</strong>";
 						comments += "<small class=''>";
 						comments += replyService.displayTime(list[i].replyRegDate);
 						comments += "</small></div>";
-						comments += "<p>" + list[i].reply + "</p></div></li>";
 						
+						if(i != updateRno) {
+						
+							comments += "<p class=''>" + list[i].reply + "</p></div>";
+							comments += "<button id='updateReplyFormBtn' type='button' class='" + i + "'>UPDATE</button>"
+							comments += "<button id='deleteReplyBtn' type='button' class=''>REMOVE</button></li>"
+														
+						} else {
+							
+							comments += "<textarea class='' rows='3' name='reply' placeholder='New reply!'>";
+							comments += list[i].reply + "</textarea></div>";
+							comments += "<button id='updateReplyBtn' type='button' class='" + i + "'>UPDATE</button>"
+							comments += "<button id='cancelBtn' type='button' class=''>CANCEL</button></li>";
+							updateRno = -1;
+							
+						}											
+
+						comments += "<hr>";
+						
+						// console.log("updateRno 1: " + updateRno);
+													
 					}
+					
+					/* /.댓글 리스트 (리스트 보기 + 수정) */
 					
 					replyUL.html(comments);
 					showReplyPage(replyCnt);
@@ -244,6 +273,15 @@
 			// active: 현재 클릭한 페이지 번호
 			let active = pageNum == i ? "active" : "";
 			pageHtml += "<li class='" + active + "'>";
+			pageHtml += "<a class='' href='" + i + "'>";
+			pageHtml += i + "</a></li>";			
+			
+		}
+		
+		// NEXT 버튼 활성화
+		if(next) {
+			
+			pageHtml += "<li class=''>";
 			pageHtml += "<a class='' href='" + (endNum + 1) + "'>";
 			pageHtml += "NEXT</a></li>";
 			
@@ -263,8 +301,9 @@
 	var replyForm = $(".replyForm");
 	
 	// name 속성이 reply 인 input
-	var formInputReply = replyForm.find("input[name='reply']");
+	var formInputReply = replyForm.find("textarea[name='reply']");
 	var formInputReplyer = replyForm.find("input[name='replyer']");
+	
 	
 	// register reply
 	$("#registerReplyBtn").on("click", function(e) {
@@ -277,10 +316,13 @@
 				bno: bnoValue
 		};
 		
+		console.log("get: " + reply);
+		
 		replyService.add(reply, function(result) {
 			
 			alert(result);
 			replyForm.find("input").val("");
+			replyForm.find("textarea[name='reply']").val("");
 			
 			showList(-1);
 			
@@ -291,23 +333,38 @@
 	
 	/* update reply */
 		
-	$("updateReplyBtn").on("click", function(e) {
+	// update 버튼 누르면 updateForm 나타내기
+	// event delegation
+	replyUL.on("click", "#updateReplyFormBtn", function(e) {
+		// 나중에 동적으로 생기는 #updateReplyFormBtn tag 에 
+		// 이벤트 대상 변경
+		
+		updateRno = $(this).attr("class");
+		
+		// console.log("updateRno 2: " + updateRno);
+		
+		showList(pageNum);
+		
+	});
+	
+	
+		replyUL.on("click", "#updateReplyBtn", function(e) {
 		// 댓글 수정
 		
-		let originalReplyer = formInputReplyer.val();
+		// let originalReplyer = formInputReplyer.val();
 		
 		var reply = {
-				rno: replyForm.data("rno"),
-				reply: formInputReply.val(),
-				replyer: originalReplyer
+				rno: $(this).parents(".replyLiTag").data("rno"),
+				reply: $(this).parents(".replyLiTag").find("textarea").val(),
+				replyer: $(this).parents(".replyLiTag").find("strong").text()
 		}
-		
-		if (replyer != originalReplyer) {
+
+		//if (replyer != originalReplyer) {
 			
-			alert("Couldn't update a reply.");
-			return;
+		//	alert("Couldn't update a reply.");
+		//	return;
 			
-		}
+		//}
 		
 		replyService.update(reply, function(result) {
 			
@@ -320,30 +377,57 @@
 		
 		
 	});
-		// 나중에 동적으로 생기는 li tag 에 이벤트 대상 변경
-		
+			
 	/* /.update a reply */
 	
 	
-	/* Delete a reply */
-	$("#deleteReplyBtn").on("click", function(e) {
-		
-		let originalReplyer = formInputReplyer.val();
-		
-		if(replyer != originalReplyer) {
-			
-			alert("Couldn't delete a reply.")
-			return;
-			
-		}
-		
-	replyService.remove(rno, originalReplyer, function(result) {
-		
-		alert(result);
+	/* cancelation to update a reply */
+	replyUL.on("click", "#cancelBtn", function(e) {
 		
 		showList(pageNum);
 		
-	});		
+	});
+	
+	/* /.cancelation to update a reply */
+	
+		
+	/* Delete a reply */
+	replyUL.on("click", "#deleteReplyBtn", function(e) {
+		
+		// let originalReplyer = formInputReplyer.val();
+		
+		let originalReplyer = $(this).parents(".replyLiTag")
+			.find("strong").text();
+		
+		console.log("delete replyer: " + originalReplyer)
+		
+		let rno = $(this).parents(".replyLiTag").data("rno");
+		
+		console.log("delete rno: " + rno);
+		
+		//if(replyer != originalReplyer) {
+			
+		//	alert("Couldn't delete a reply.")
+		//	return;
+			
+		//}
+				
+		
+		if(confirm("Do you really want to delete a reply?")) {
+			
+			// alert(rno + "/" + originalReplyer);
+			
+			replyService.remove(rno, originalReplyer, function(result) {
+			
+			alert(result);
+			
+			showList(pageNum);
+			
+			});		
+			
+		}
+		
+		
 		
 	});
 	

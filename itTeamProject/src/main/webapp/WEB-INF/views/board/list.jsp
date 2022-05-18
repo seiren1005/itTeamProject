@@ -20,11 +20,20 @@
 				<button id="regBtn" type="button" class="">
 					새 글
 				</button>
+				<form method="get" class="purposeForm">
+					<button data-oper="all" type="submit" 
+						class="purposeBtn">ALL</button>
+					<button data-oper="qna" type="submit" 
+						class="purposeBtn">Q&A</button>
+					<button data-oper="free" type="submit" 
+						class="purposeBtn">FREE</button>
+				</form>
 				<div class="">
 					<table class="">
 						<thead>
 							<tr>
 								<th>BNo.</th>
+								<th>TAG</th>
 								<th>TITLE</th>
 								<th>WRITER</th>
 								<th>REGDATE</th>
@@ -36,6 +45,16 @@
 						<c:forEach items="${list }" var="board">
 							<tr>
 								<td><c:out value="${board.bno }" /></td>
+								<td>
+									<c:choose>
+										<c:when test="${board.purpose eq 'Q' }">
+											Q&A
+										</c:when>
+										<c:otherwise>
+											FREE
+										</c:otherwise>									
+									</c:choose>								
+								</td>
 								<td>
 									<a class="moveDetails" 
 										href="<c:out value='${board.bno }' />">
@@ -219,6 +238,39 @@
 						
 		});
 		
+		
+		/* qna and free tag */
+		var purposeForm = $(".purposeForm");
+		
+		$(".purposeBtn").on("click", function(e) {
+			
+			e.preventDefault();
+			
+			var operation = $(this).data("oper");
+			
+			if(operation === "all") {
+				
+				purposetForm.att("action", "/board/list");
+				
+			} else if(operation === "qna") {
+				
+				purposeForm.attr("action", "/board/list/qna");
+				
+			} else if(operation === "free") {
+				
+				purposeForm.attr("action", "/board/list/free");
+				
+			}
+			
+			purposeForm.submit();
+			
+			
+		});
+		
+		
+		/* /.qna and free tag */
+		
+		
 		/* /.Page processing */
 		
 		
@@ -274,8 +326,16 @@
 			
 		});		
 		/* /.Add search event */	
+
+		
+		
+		
+		
+		
 		
 	}); // end $(document).ready()	
+		
 </script>
+	
 	
 <%@ include file="../includes/footer.jsp" %>

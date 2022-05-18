@@ -1,8 +1,3 @@
-/**
- * 
- */
-
-console.log("is working?");
 
 var replyService = (function () {
 	
@@ -46,13 +41,17 @@ var replyService = (function () {
 		var page = param.page || 1;
 		var bno = param.bno;
 		
+//		console.log("param.bno: " + bno);
+		
 		// 페이지 처리된 리스트
 		$.getJSON("/replies/pages/" + bno + "/" + page + ".json", 
 			function(data) {
 			
+//			console.log("app list: " + data.replyList);
+			
 			if(callback) {
 				
-				callback(data.replyCnt, data.list);
+				callback(data.replyCnt, data.replyList);
 				
 			}
 						
@@ -71,11 +70,11 @@ var replyService = (function () {
 	// 댓글 번호 (rno) 필요
 	function remove(rno, replyer, callback, error) {
 		
+		// console.log("remove rno: " + rno);
+		
 		$.ajax({
 			type: 'delete',
-			url: 'replies/' + rno,
-			type: 'put',
-			url: 'replies/' + reply.rno,
+			url: '/replies/' + rno,			
 			data: JSON.stringify({
 				rno: rno,
 				replyer: replyer
