@@ -10,7 +10,16 @@ public class ReplyPage {
 	// collection of replies
 	private List<ReplyVO> replyList;
 	
+	private int checkValue;
 	
+	
+	
+	public int getCheckValue() {
+		return checkValue;
+	}
+	public void setCheckValue(int checkValue) {
+		this.checkValue = checkValue;
+	}
 	public int getReplyCnt() {
 		return replyCnt;
 	}
@@ -27,7 +36,7 @@ public class ReplyPage {
 	
 	@Override
 	public String toString() {
-		return "ReplyPage [replyCnt=" + replyCnt + ", replyList=" + replyList + "]";
+		return "ReplyPage [replyCnt=" + replyCnt + ", replyList=" + replyList + ", checkValue=" + checkValue + "]";
 	}
 	
 	

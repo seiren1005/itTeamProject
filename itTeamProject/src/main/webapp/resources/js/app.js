@@ -50,15 +50,15 @@ var replyService = (function () {
 //			console.log("app list: " + data.replyList);
 			
 			if(callback) {
-				
-				callback(data.replyCnt, data.replyList);
-				
+//				console.log("app.js checkValue: " + data.checkValuecheckValue)
+				callback(data.replyCnt, data.replyList, data.checkValue);				
 			}
 						
 		}).fail(function(xhr, status, err) { 
 			
 			if (error) {
 				error(err);
+				console.log("do error occurs?");
 			}
 			
 		}); // end getJSON()

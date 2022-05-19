@@ -29,6 +29,8 @@ public interface ReplyMapper {
 	
 	// Count total replies
 	public int getCountReplyByBno(int bno);
-	
+
+	// check is there adopted valed in adoption column
+	public int checkAdoption(int bno);
 	
 }

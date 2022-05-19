@@ -17,6 +17,7 @@
 	<!-- hidden input tag -->
 	<input type="hidden" name="pageNum"	value="<c:out value='${cri.pageNum }' />" />
 	<input type="hidden" name="amount" value="<c:out value='${cri.amount }' />" />
+	<input type="hidden" name="purpose" value="<c:out value='${cri.purpose }' />" />
 
 	<input type="hidden" name="searchType" value="<c:out value='${cri.searchType }' />" />
 	<input type="hidden" name="keyword" value="<c:out value='${cri.keyword }' />" />
@@ -100,7 +101,9 @@
 				
 				var searchTypeTag = $("input[name='searchType']").clone();
 				
-				var keywordTag = $("input[name='searchType']").clone();
+				var keywordTag = $("input[name='keyword']").clone();
+				
+				var purposeTag = $("input[name='purpose']").clone();
 				
 				formObj.empty();
 				// formObj 입력 정보 초기화
@@ -109,6 +112,7 @@
 				formObj.append(pageNumTag).append(amountTag)
 					.append(searchTypeTag)
 					.append(keywordTag)
+					.append(purposeTag)
 					
 			}
 			

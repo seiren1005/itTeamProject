@@ -64,18 +64,7 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.selectAllWithPage(cri);
 		
 	}
-	
-	
-	@Override
-	public List<BoardVO> getList(Criteria cri, String purp) {
-		// TODO Auto-generated method stub
 		
-		log.info("Board Page Inquiry: " + cri);
-		
-		return mapper.selectAllWithPagePurp(cri, purp);
-		
-	}
-	
 
 	@Override
 	public boolean modify(BoardVO bvo) {
@@ -111,17 +100,6 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.getTotalCount(cri);
 		
 	}
-	
-	
-	@Override
-	public int getTotal(Criteria cri, String purp) {
-		// TODO Auto-generated method stub
-		
-		log.info("Get total count of board");
-		
-		return mapper.getTotalCountPurp(cri, purp);
-		
-	}	
 	
 	
 }

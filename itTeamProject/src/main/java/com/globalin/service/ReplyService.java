@@ -23,4 +23,5 @@ public interface ReplyService {
 	// 리스트 + 총 댓글 갯수 (해당 게시물만)
 	public ReplyPage getReplyListWithPage(Criteria cri, int bno);
 	
+	
 }

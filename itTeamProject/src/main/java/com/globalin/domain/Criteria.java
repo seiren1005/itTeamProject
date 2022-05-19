@@ -7,6 +7,7 @@ public class Criteria {
 	private int pageNum;
 	private int amount;
 	
+	private String purpose = "A";
 	private String searchType;
 	private String keyword;
 	
@@ -19,6 +20,12 @@ public class Criteria {
 	}
 
 	
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
 	public int getPageNum() {
 		return pageNum;
 	}
@@ -47,8 +54,8 @@ public class Criteria {
 	
 	@Override
 	public String toString() {
-		return "Criteria [pageNum=" + pageNum + ", amount=" + amount + ", searchType=" + searchType + ", keyword="
-				+ keyword + "]";
+		return "Criteria [pageNum=" + pageNum + ", amount=" + amount + ", purpose=" + purpose + ", searchType="
+				+ searchType + ", keyword=" + keyword + "]";
 	}
 	
 	
@@ -58,5 +65,6 @@ public class Criteria {
 				new String[] {} : searchType.split("");
 		
 	}
+	
 	
 }

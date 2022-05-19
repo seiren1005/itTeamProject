@@ -22,9 +22,9 @@
 	<!-- selectAllWithPaging method at ReplyMapper -->
 	<select id="selectAllWithPaging" resultType="com.globalin.domain.ReplyVO">
 		<![CDATA[
-			SELECT rno, bno, reply, replyer, replyregdate, replymoddate
+			SELECT rno, bno, reply, replyer, replyregdate, replymoddate, adoption
 			FROM (SELECT /*+ INDEX(tbl_reply pk_reply) */
-						rownum rn, rno, bno, reply, replyer, replyregdate, replymoddate
+						rownum rn, rno, bno, reply, replyer, replyregdate, replymoddate, adoption
 					FROM tbl_reply
 					WHERE bno = #{bno}
 								AND rno > 0
@@ -38,7 +38,9 @@
 	<!-- update method at ReplyMapper -->
 	<update id="update">
 		UPDATE tbl_reply
-		SET reply = #{reply}, replymoddate = SYSDATE
+		SET reply = #{reply}, 
+			replymoddate = SYSDATE,
+			adoption = #{adoption}					
 		WHERE rno = #{rno}
 	</update>	
 	<!-- /.update method at ReplyMapper -->
@@ -60,6 +62,17 @@
 		WHERE bno = #{bno}
 	</select>
 	<!-- /.getCountReplyByBno method at ReplyMapper -->
+	
+	
+	<!-- 답변 선택 여부 -->
+	<select id="checkAdoption" resultType="int">
+		SELECT COUNT(adoption)
+		FROM tbl_reply
+		WHERE (bno = #{bno})
+				AND adoption IS NOT NULL
+	</select>
+	
+	<!-- /.답변 선택 여부 -->
 	
 
 </mapper>

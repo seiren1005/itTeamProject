@@ -58,12 +58,18 @@
 						value="<c:out value='${cri.pageNum }' />" />
 					<input type="hidden" name="amount" 
 						value="<c:out value='${cri.amount }' />" />
+					<input type="hidden" name="purpose" 
+						value="<c:out value='${cri.purpose }' />" />
 						
 					<!-- Ramain search information -->
 					<input type="hidden" name="searchType" 
 						value="<c:out value='${cri.searchType }' />" />
 					<input type="hidden" name="keyword" 
 						value="<c:out value='${cri.keyword }' />" />
+		
+					<input type="hidden" name="boardPurpose" 
+						value="<c:out value='${board.purpose }' />" />	
+					
 				</form>
 				<!-- /.Hidden information -->					
 				
@@ -127,7 +133,8 @@
 	/* function for reply */
 	var replyUL = $(".chat");
 	var updateRno = -1;
-	console.log("updateRno 0: " + updateRno);
+	// console.log("updateRno 0: " + updateRno);
+	
 	
 	$(document).ready(function() {
 		
@@ -146,10 +153,11 @@
 					page: page || 1
 					// page 가 있으면 page 값으로 없으면 1 로
 				},
-				function(replyCnt, list) {
+				function(replyCnt, list, checkValue) {
 					// success 시 callback 함수에 replyCnt, list 받아옴
 					console.log("replyCnt: " + replyCnt);
 					console.log("list: " + list);
+					console.log("get.jsp checkValue: " + checkValue)
 					
 					// 페이지 번호가 -1 일 경우 마지막 페이지로 이동
 					if(page == -1) {
@@ -161,7 +169,7 @@
 						
 					}
 					
-					var comments="";
+					var comments = "";
 					
 					if (list == null || list.length == 0) {
 						// 게시물에 댓글 X -> html 코드 조립 필요 없음
@@ -169,15 +177,33 @@
 						return;
 						// exit function
 					}
+
+					// jquery 로 Model (spring 데이터 전달 객체) 값 여러 개 
+					// 가져오기
+					// <c:forEach items="달러기호{board}" var="board">		
+					//		미리 선언한 리스트에 값 저장
+					// </c:forEach>
+					
 					
 					/* 댓글 리스트 (리스트 보기 + 수정) */
-					
 					
 					// exist reply
 					for (let i = 0; i < list.length; i++) {
 						
 						comments += "<li class='replyLiTag' data-rno='" + list[i].rno + "'>";
-						comments += "<div>";
+						
+						console.log("i: " + list[i].adotion);
+						
+						if(list[i].adoption != null) {
+					
+							comments += "<div class='replyDiv adopted'>";
+							
+						} else {
+							
+							comments += "<div class='replyDiv'>";
+							
+						}
+						
 						comments += "<div class=''>";
 						comments += list[i].rno;
 						comments += ". <strong class='replyReplyerInfo'>" + list[i].replyer + "</strong>";
@@ -185,22 +211,39 @@
 						comments += replyService.displayTime(list[i].replyRegDate);
 						comments += "</small></div>";
 						
-						if(i != updateRno) {
-						
+						if(list[i].rno != updateRno) {
+							
 							comments += "<p class=''>" + list[i].reply + "</p></div>";
+							comments += "<div class='btnDiv'>"
 							comments += "<button id='updateReplyFormBtn' type='button' class='" + i + "'>UPDATE</button>"
-							comments += "<button id='deleteReplyBtn' type='button' class=''>REMOVE</button></li>"
-														
+							comments += "<button id='deleteReplyBtn' type='button' class=''>REMOVE</button>"
+							
+							
+							
+							if($("input[name='boardPurpose']").val() == "Q") {
+								
+								if (checkValue != 1) {
+									
+									comments += "<button id='selectReplyBtn' class='" + list[i].rno + "'>SELECT</button></li>"
+									// comments += "<button id='cancelSelectBtn' class=''>CANCEL</button></li>"
+									
+								}
+								
+							}
+							
+								
 						} else {
 							
 							comments += "<textarea class='' rows='3' name='reply' placeholder='New reply!'>";
 							comments += list[i].reply + "</textarea></div>";
-							comments += "<button id='updateReplyBtn' type='button' class='" + i + "'>UPDATE</button>"
-							comments += "<button id='cancelBtn' type='button' class=''>CANCEL</button></li>";
+							comments += "<div class='btnDiv'>"
+							comments += "<button id='updateReplyBtn' type='button' class='" + list[i].rno + "'>UPDATE</button>"
+							comments += "<button id='cancelBtn' type='button' class=''>CANCEL</button>";
 							updateRno = -1;
 							
 						}											
 
+						comments += "</div></li>";
 						comments += "<hr>";
 						
 						// console.log("updateRno 1: " + updateRno);
@@ -450,6 +493,34 @@
 	
 	/* /.event delegation */
 	
+	
+	/* Select reply as a answer of question */
+	replyUL.on("click", "#selectReplyBtn", function() {
+					
+		// console.log("is entered?");
+		
+		var reply = {
+				rno: $(this).parents(".replyLiTag").data("rno"),
+				reply: $(this).parents(".replyLiTag").find("p").text(),
+				replyer: $(this).parents(".replyLiTag").find("strong").text(),
+				adoption: "adopted"
+		}
+		
+		// console.log("reply1: " + reply)
+		
+		replyService.update(reply, function(result) {
+			
+			alert(result);			
+			showList(pageNum);
+			
+		});
+		
+	});
+	
+	/* /.Select reply as a answer of question */
+	
+	
+	
 	}); // end ready(function())
 	
 </script>
@@ -457,7 +528,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		var operForm = $("operForm");
+		var operForm = $("#operForm");
 		
 		$("button[data-oper='update']").on("click", function() {
 			operForm.submit();
@@ -466,8 +537,8 @@
 		$("button[data-oper='list']").on("click", function() {
 			
 			operForm.find("#bno").remove();
-			operForm.attr("action", "board/list");
-			operform.submit();
+			operForm.attr("action", "/board/list");
+			operForm.submit();
 						
 		});
 		

@@ -8,10 +8,18 @@ public class ReplyVO {
 	
 	private int rno, bno;
 	private String reply, replyer;
+	private String adoption;
 	private Date replyRegDate;
 	private Date replyModDate;
 	
 	
+	
+	public String getAdoption() {
+		return adoption;
+	}
+	public void setAdoption(String adoption) {
+		this.adoption = adoption;
+	}
 	public int getRno() {
 		return rno;
 	}
@@ -52,8 +60,8 @@ public class ReplyVO {
 	
 	@Override
 	public String toString() {
-		return "ReplyVO [rno=" + rno + ", bno=" + bno + ", reply=" + reply + ", replyer=" + replyer + ", replyRegDate="
-				+ replyRegDate + ", replyModDate=" + replyModDate + "]";
+		return "ReplyVO [rno=" + rno + ", bno=" + bno + ", reply=" + reply + ", replyer=" + replyer + ", adoption="
+				+ adoption + ", replyRegDate=" + replyRegDate + ", replyModDate=" + replyModDate + "]";
 	}
 		
 	

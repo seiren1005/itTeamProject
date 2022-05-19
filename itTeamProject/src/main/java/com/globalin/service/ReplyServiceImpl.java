@@ -112,12 +112,14 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		rPage.setReplyCnt(rMapper.getCountReplyByBno(bno));
 		rPage.setReplyList(rMapper.selectAllWithPaging(cri, bno));
+		rPage.setCheckValue(rMapper.checkAdoption(bno));
 			
+		System.out.println(rPage.getCheckValue());
 //		System.out.println(rPage);
 		
 		return rPage;
 		
 	}
-	
+
 
 }

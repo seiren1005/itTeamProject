@@ -20,13 +20,18 @@
 				<button id="regBtn" type="button" class="">
 					새 글
 				</button>
-				<form method="get" class="purposeForm">
+				<form method="get" class="purposeForm" action="/board/list">
 					<button data-oper="all" type="submit" 
 						class="purposeBtn">ALL</button>
 					<button data-oper="qna" type="submit" 
 						class="purposeBtn">Q&A</button>
 					<button data-oper="free" type="submit" 
 						class="purposeBtn">FREE</button>
+					<input type="hidden" name="purpose" />
+					<input type="hidden" name="pageNum" 
+						value="${pageMaker.cri.pageNum }" />
+					<input type="hidden" name= "amount" 
+						value="${pageMaker.cri.amount }" />
 				</form>
 				<div class="">
 					<table class="">
@@ -116,6 +121,8 @@
 									value="${pageMaker.cri.pageNum }" />
 								<input type="hidden" name= "amount" 
 									value="${pageMaker.cri.amount }" />
+								<input type="hidden" name= "purpose" 
+									value="${pageMaker.cri.purpose }" />
 								<button class="">SEARCH</button>							
 							</form>
 						</div>
@@ -137,6 +144,9 @@
 						<input type="hidden" name="keyword" 
 							value="<c:out 
 								value='${pageMaker.cri.keyword }' />" />
+						<input type="hidden" name="purpose" 
+							value="<c:out 
+								value='${pageMaker.cri.purpose }' />" />
 					</form>
 					<!-- /.Transport page date -->
 					
@@ -248,20 +258,23 @@
 			
 			var operation = $(this).data("oper");
 			
+			$.get("/replies")
+			
 			if(operation === "all") {
 				
-				purposetForm.att("action", "/board/list");
+				purposeForm.find("input[name='purpose']").val("A");
 				
 			} else if(operation === "qna") {
 				
-				purposeForm.attr("action", "/board/list/qna");
+				purposeForm.find("input[name='purpose']").val("Q");
 				
 			} else if(operation === "free") {
 				
-				purposeForm.attr("action", "/board/list/free");
+				purposeForm.find("input[name='purpose']").val("F");
 				
 			}
 			
+			purposeForm.find("input[name='pageNum']").val("1");
 			purposeForm.submit();
 			
 			

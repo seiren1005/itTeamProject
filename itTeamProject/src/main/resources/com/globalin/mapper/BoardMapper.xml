@@ -45,22 +45,12 @@
 	</sql>
 	
 	
-	<sql id="purp">
+	<sql id="purposeCriteria">
 	
 		<!-- Insert SQL according to searchType -->
-		<trim prefix="(" suffix=") AND " prefixOverrides="AND">
-			<trim prefix="AND">
-				<choose>
-					<when test="purp == '/'.toString()"></when>
-					<when test="purp == '/qna'.toString()">
-						purpose = 'Q'
-					</when>
-					<when test="purp == '/free'.toString()">
-						purpose = 'F'
-					</when>
-				</choose>			
-			</trim>
-		</trim>
+		<if test="purpose != 'A'.toString()">
+			(purpose = #{purpose}) AND
+		</if>
 		<!-- /.Insert SQL according to searchType -->
 		 
 	</sql>
@@ -120,27 +110,10 @@
 				WHERE
 	]]>
 		<include refid="criteria"></include>
+		<include refid="purposeCriteria"></include>
+		
 	<![CDATA[	
-					rownum <= #{pageNum} * #{amount})
-		WHERE rn > (#{pageNum} - 1) * #{amount}			
-	]]>	
-	</select>	
-	<!-- /.Implement selectAll page processed method at BoardMapper interface -->
-	
-	
-	<!-- Implement selectAll page processed method at BoardMapper interface -->
-	<select id="selectAllWithPagePurp" resultType="com.globalin.domain.BoardVO">
-	<![CDATA[
-		SELECT bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
-		FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
-					rownum rn, bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
-				FROM tbl_board
-				WHERE
-	]]>
-		<include refid="criteria"></include>
-		<include refid="purp"></include>
-	<![CDATA[	
-					rownum <= #{pageNum} * #{amount})
+					(rownum <= #{pageNum} * #{amount}))
 		WHERE rn > (#{pageNum} - 1) * #{amount}			
 	]]>	
 	</select>	
@@ -157,31 +130,13 @@
 		
 			<!-- Using template -->
 			<include refid="criteria"></include>
+			<include refid="purposeCriteria"></include>
 		
 		<![CDATA[
-					bno > 0
+					(bno > 0)
 		]]>
 	</select>
 	<!-- /.Get total count at board-->
-	
-	
-	<!-- Get total count at board -->
-	<select id="getTotalCountPurp" resultType="int">
-		<![CDATA[
-			SELECT COUNT(*)
-			FROM tbl_board	
-			WHERE
-		]]>
-		
-			<!-- Using template -->
-			<include refid="criteria"></include>
-			<include refid="purp"></include>
-		
-		<![CDATA[
-					bno > 0
-		]]>
-	</select>
-	<!-- /.Get total count at board-->		
 	
 	
 	<!-- Implement update method at BoardMapper interface -->

@@ -79,7 +79,7 @@ CREATE TABLE tbl_board(
 
 
 ALTER TABLE tbl_board -- 변경하려는 table
-ADD CONSTRAINT pk_board -- 제약조건 이름
+ADD CONSTRAINT pk_board -- 제약조건 이름�
 PRIMARY KEY (bno); -- 제약조건(주려는 컬럼)
 
 

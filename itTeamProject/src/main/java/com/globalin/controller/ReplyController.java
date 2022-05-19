@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,6 +80,8 @@ public class ReplyController {
 		
 		rvo.setRno(rno);
 		
+		System.out.println("rvo: " + rvo);
+		
 		return service.update(rvo) == 1 ? 
 				new ResponseEntity<>("success", HttpStatus.OK) :
 				new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +94,7 @@ public class ReplyController {
 			produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public ResponseEntity<ReplyPage> getList(
 			@PathVariable("bno") int bno, 
-			@PathVariable("page") int page) {
+			@PathVariable("page") int page, Model model) {
 		
 //		System.out.println("is getList working?");
 //		System.out.println("controller bno: " + bno);
@@ -99,8 +102,8 @@ public class ReplyController {
 		Criteria cri = new Criteria();
 		cri.setPageNum(page);
 		cri.setAmount(10);
-		
-//		System.out.println("controller return: " +service.getReplyListWithPage(cri, bno));
+						
+//		System.out.println("controller return: " + service.getReplyListWithPage(cri, bno));
 		
 		return new ResponseEntity<>(
 				service.getReplyListWithPage(cri, bno), HttpStatus.OK);
