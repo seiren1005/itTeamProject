@@ -1,16 +1,35 @@
 package com.globalin.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 
 // 게시판 글 정보 저장
 public class BoardVO {
 
-	private int bno, replyCnt;
+	private int bno, replyCnt, viewCnt;
 	private String purpose, title, content, writer;
-	private String secret = "P";
+	
+	// 비밀글 컬럼
+	private String secret = "no";
+	
 	private Date regDate, modDate;
 	
+	// 파일 업로드 관련
+	private String[] files;
 	
+	
+	public int getViewCnt() {
+		return viewCnt;
+	}
+	public void setViewCnt(int viewCnt) {
+		this.viewCnt = viewCnt;
+	}
+	public String[] getFiles() {
+		return files;
+	}
+	public void setFiles(String[] files) {
+		this.files = files;
+	}
 	public String getSecret() {
 		return secret;
 	}
@@ -69,9 +88,9 @@ public class BoardVO {
 	
 	@Override
 	public String toString() {
-		return "BoardVO [bno=" + bno + ", replyCnt=" + replyCnt + ", title=" + title + ", content=" + content
-				+ ", writer=" + writer + ", secret=" + secret + ", purpose=" + purpose + ", regDate=" + regDate
-				+ ", modDate=" + modDate + "]";
+		return "BoardVO [bno=" + bno + ", replyCnt=" + replyCnt + ", viewCnt=" + viewCnt + ", purpose=" + purpose
+				+ ", title=" + title + ", content=" + content + ", writer=" + writer + ", secret=" + secret
+				+ ", regDate=" + regDate + ", modDate=" + modDate + ", files=" + Arrays.toString(files) + "]";
 	}
 		
 	

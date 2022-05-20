@@ -67,6 +67,55 @@ COMMIT;
 
 
 ALTER TABLE tbl_reply
-ADD (adoption VARCHAR2(8));
+ADD (adoption VARCHAR2(8) DEFAULT '');
 
+
+ALTER TABLE tbl_board
+ADD (privacy VARCHAR2(4) DEFAULT 'no');
+
+
+COMMIT;
+
+ALTER TABLE tbl_board
+DROP COLUMN privacy;
+
+ALTER TABLE tbl_board
+DROP COLUMN secret;
+
+ALTER TABLE tbl_board
+ADD (privacy VARCHAR2(3) DEFAULT 'no');
+
+
+COMMIT;
+
+
+ALTER TABLE tbl_board
+ADD (secret VARCHAR2(3) DEFAULT 'no');
+
+
+COMMIT;
+
+
+-- Creat table for attachment
+CREATE TABLE tbl_attachment(
+	filename VARCHAR2(50) NOT NULL,
+    savePath VARCHAR2(500) NOT NULL,
+    uuid VARCHAR2(100) NOT NULL,
+	bno NUMBER(10) NOT NULL,
+    imgCheck VARCHAR2(3) NOT NULL,
+	regdate DATE DEFAULT SYSDATE
+);
+
+
+-- Set a primary key at tbl_attachment
+ALTER TABLE tbl_attachment
+ADD CONSTRAINT pk_attachment PRIMARY KEY (filename);
+
+-- Set a Foreign key at tbl_attachment
+ALTER TABLE tbl_attachment
+ADD CONSTRAINT fk_attachment FOREIGN KEY (bno)
+REFERENCES tbl_board (bno);
+
+
+COMMIT;
 

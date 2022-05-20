@@ -21,8 +21,14 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	
+	<!-- @Controller annotation scan path -->
 	<context:component-scan base-package="com.globalin.controller" />
 	
 	
+	<!-- Add bean for helping file upload -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</beans:bean>
 	
 </beans:beans>

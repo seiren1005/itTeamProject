@@ -43,7 +43,7 @@
 					</div>
 					<div class="uploadDiv">
 						<label>FILE UPLOAD</label>
-						<input type="file" class="uploadInput" name="attachFile" multiple />
+						<input type="file" name="attachFile" multiple />
 						<button id="uploadBtn" >UPLOAD</button>
 					</div>
 					<div class="uploadResult">
@@ -99,44 +99,12 @@
 		var cloneObj = $(".uploadDiv").clone();
 		
 		// 업로드 결과를 보여줄 div tag 안에 ul tag 찾아오기
-		var uploadResult = $(".imageContainer ul");
+		var uploadResult = $(".uploadResult ul");
 		
 		/* /.File upload restrict */
 		
 		
-		$(".uploadInput").change(function(e) {
-			
-			var reader = new FileReader();
-			reader.readAsDataURL(e.target.files[0]);
-			
-			reader.onload = function () {
-				
-				var tempImg = new Image();
-				
-				tempImg.src = reader.result;
-				tempImg.onload = function () {
-					
-					var canvas = document.createElement('cavas');
-					var canvasContext = canvas.getContext("2d");
-					
-					canvas.width = 100;
-					canvas.height = 100;
-					
-					canvasContext.drawImage(this, 0, 0, 100, 100);
-					
-					var dataURI = canvas.toDataURL("image/jpeg");
-					
-					var imgTag = "<img id='preview_img' style='width:35' />"
-					$(".imageContainer").append(imgTag);
-					
-				}
-				
-			}
-			
-		})
-		
-		
-		function showUploadFile() {
+		function showUploadFile(uploadArr) {
 			
 			let uploadHtml = "";
 			

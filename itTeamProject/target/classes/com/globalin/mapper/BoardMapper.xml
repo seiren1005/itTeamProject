@@ -22,8 +22,8 @@
 					지워줌-->				
 					<choose>
 						<!-- Search in title -->
-						<when test="searchType == 'T'.toString()">						
-							title LIKE '%'||#{keyword}||'%'
+						<when test="searchType == 'T'.toString()">
+							title LIKE '%'||#{keyword}||'%'		
 						</when>
 						
 						<!-- Search in content -->
@@ -53,6 +53,13 @@
 		</if>
 		<!-- /.Insert SQL according to searchType -->
 		 
+	</sql>
+	
+	
+	<sql id="secretCheck">
+		<if test="secret == 'yes'.toString()">
+			
+		</if>		
 	</sql>
 			
 	<!-- /.SQL template -->

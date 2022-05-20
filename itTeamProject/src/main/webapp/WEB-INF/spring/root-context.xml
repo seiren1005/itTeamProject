@@ -47,4 +47,10 @@
 	<!-- /.Set transaction and aop to using annotation -->
 	
 	
+	<!-- Set file upload path -->
+	<bean id="uploadPath" class="java.lang.String">
+		<constructor-arg value="C:\\Users\\park\\Documents\\gits\\itTeamProject\\itTeamProject\\src\\main\\webapp\\resources\\upload">
+		</constructor-arg>
+	</bean>
+	
 </beans>

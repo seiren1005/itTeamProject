@@ -7,7 +7,8 @@
 	<!-- Filter for encoding to UTF-8 -->
 	<filter>
 		<filter-name>encoding</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -24,31 +25,55 @@
 	<!-- /.Filter mapping (어느 경로 또는 서블릿과 매칭 시킬지 -->
 
 
-	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<!-- The definition of the Root Spring Container shared by all Servlets 
+		and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
 	</context-param>
-	
+
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
 	</listener>
 
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml
+			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<!-- Setting for file upload -->
+		<multipart-config>
+			<location>C:\\temp</location>
+
+			<!-- Maximum file byte -->
+			<max-file-size>20971520</max-file-size> <!-- 20 mb -->
+
+			<!-- Maximum file byte at once -->
+			<max-request-size>41943040</max-request-size> <!-- 40 mb -->
+
+			<!-- Use memory over this size -->
+			<file-size-threshold>20971520</file-size-threshold> <!-- 20 mb -->
+		</multipart-config>
+
+		<!-- /.Setting for file upload -->
 	</servlet>
-		
+
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	<!-- /.Processes application requests -->
+
+
+
+
 
 </web-app>

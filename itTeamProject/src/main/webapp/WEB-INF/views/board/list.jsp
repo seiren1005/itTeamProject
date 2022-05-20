@@ -39,6 +39,7 @@
 							<tr>
 								<th>BNo.</th>
 								<th>TAG</th>
+								<th></th>
 								<th>TITLE</th>
 								<th>WRITER</th>
 								<th>REGDATE</th>
@@ -60,6 +61,20 @@
 										</c:otherwise>									
 									</c:choose>								
 								</td>
+								<c:if test="${board.secret eq 'yes'}">
+								<td>
+									<img class="secretIcon" src="/resources/img/lock_02.png" />
+								</td>
+								<td>
+									<a class="moveDetails" 
+										href="<c:out value='${board.bno }' />">
+										비밀글입니다.
+										<b>[<c:out value="${board.replyCnt }" />]</b>
+									</a>
+								</td>
+								</c:if>
+								<c:if test="${board.secret eq 'no' }">
+								<td></td>
 								<td>
 									<a class="moveDetails" 
 										href="<c:out value='${board.bno }' />">
@@ -67,6 +82,7 @@
 										<b>[<c:out value="${board.replyCnt }" />]</b>
 									</a>
 								</td>
+								</c:if>
 								<td><c:out value="${board.writer }" /></td>
 								<td><fmt:formatDate pattern="yyyy-MM-dd"
 									value="${board.regDate }" /></td>
@@ -114,7 +130,7 @@
 								</select>
 								
 								<input type="text" name="keyword" 
-									value="<c:out value='${pagemaker.cri.keyword }' />" />
+									value="<c:out value='${pageMaker.cri.keyword }' />" />
 									
 								<!-- page info -->
 								<input type="hidden" name="pageNum" 

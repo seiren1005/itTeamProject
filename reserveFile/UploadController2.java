@@ -36,13 +36,10 @@ import net.coobird.thumbnailator.Thumbnailator;
 
 
 @Controller
-public class UploadController {
+public class UploadController2 {
 
 	private Logger log = 
-			LoggerFactory.getLogger(UploadController.class);
-	
-	@Autowired
-	private String uploadPath;
+			LoggerFactory.getLogger(UploadController2.class);
 		
 	
 	// remove attached file
@@ -155,12 +152,12 @@ public class UploadController {
 	
 	@PostMapping(value="/uploadAjaxAction", 
 			produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<AttachFile>> 
-		uploadAjaxAction(MultipartFile[] uploadFile) {
-		log.info(uploadPath);
+	public ResponseEntity<List<AttachmentVO>> 
+		uploadAjaxAction(MultipartFile[] uploadFile, String uploadPath) {
+		
 		log.info("Upload by AJAX post");
 		
-		List<AttachFile> list = new ArrayList<>();
+		List<AttachmentVO> list = new ArrayList<>();
 		
 		for(MultipartFile file: uploadFile) {
 			
@@ -168,22 +165,22 @@ public class UploadController {
 			log.info("File: " + file.getOriginalFilename());
 			// .getOriginalfilename() -> 파일의 이름 반환
 			// .getName() -> input tag 의 name attribute 값을 반환
-			log.info("Size: " + file.getSize());
 			
 			// 파일 객체 생성시, 저장할 위치, 파일 이름 필요
 			String uploadFileName = file.getOriginalFilename();
+			String savePath = calcPath(uploadPath);
 			
 			UUID uuid = UUID.randomUUID();
 			
-			AttachFile attach = new AttachFile();
+			AttachmentVO attach = new AttachmentVO();
 			attach.setUuid(uuid.toString());
-			attach.setUploadPath(uploadPath);
+			attach.setSavePath(savePath);
 			
 			// 저장할 파일 이름에 uuid_filename 형식으로 저장
 			uploadFileName = uuid.toString() + "_" + uploadFileName;			
 			attach.setFileName(uploadFileName);
 			
-			File saveFile = new File(uploadPath, uploadFileName);
+			File saveFile = new File(uploadPath + savePath, uploadFileName);
 			
 			
 			try {				
@@ -193,7 +190,7 @@ public class UploadController {
 				// create thumbnail when file is an image type
 				if(checkImageType(saveFile) == true) {
 					
-					attach.setImageCheck(true);
+					attach.setImgCheck("yes");
 					
 					FileOutputStream thumbnail = new FileOutputStream(
 							new File(uploadPath, "s_" + uploadFileName));
@@ -203,6 +200,12 @@ public class UploadController {
 							thumbnail, 100, 100);
 					
 					thumbnail.close();
+					
+				}
+				
+				if(checkImageType(saveFile) == false) {
+					
+					attach.setImgCheck("no");
 					
 				}
 				
@@ -239,6 +242,57 @@ public class UploadController {
 		return false;
 		
 	}
+	
+	
+	// 날짜별 경로 추출
+	private static String calcPath(String uploadPath) {
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		String[] paths = new String[3];
+		
+		// year
+		paths[0] = File.separator + calendar.get(Calendar.YEAR);
+		
+		// month
+		paths[1] = paths[0] + File.separator 
+				+ new DecimalFormat("00")
+					.format(calendar.get(Calendar.MONTH) + 1 ); 
+		
+		// date
+		paths[2] = paths[1] + File.separator 
+				+ new DecimalFormat("00").format(calendar.get(Calendar.DATE));
+		
+		makeDir(uploadPath, paths);
+		
+		return paths[2];
+		
+	} // end 날짜별 경로 추출
+	
+	
+	// 파일 저장 경로
+	private static void makeDir(String uploadPath, String[] paths) {
+		
+		if(new File(uploadPath + paths[paths.length-1]).exists()) {
+			// 기본경로 + 날짜 경로가 이미 존재 -> 메서드 종료
+			return;
+			
+		}
+		
+		// 날짜 경로가 없으면 생성
+		for(String path: paths) {
+			// 기본경로 + 날짜 경로 파일 객체 생성
+			File dirPath = new File(uploadPath + path);
+			
+			// 파일 객체에 해당하는 경로가 없으면
+			if(!dirPath.exists()) {
+				// 경로 생성
+				dirPath.mkdir();
+			}
+		}		
+		
+	} // end 파일 저장 경로
+	
 	
 	
 }
