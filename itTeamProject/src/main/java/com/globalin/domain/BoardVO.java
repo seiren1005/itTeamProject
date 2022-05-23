@@ -15,21 +15,28 @@ public class BoardVO {
 	private Date regDate, modDate;
 	
 	// 파일 업로드 관련
-	private String[] files;
+//	private String[] files;
+	private String fileInfo;
 	
 	
+	public String getFileInfo() {
+		return fileInfo;
+	}
+	public void setFileInfo(String fileInfo) {
+		this.fileInfo = fileInfo;
+	}
 	public int getViewCnt() {
 		return viewCnt;
 	}
 	public void setViewCnt(int viewCnt) {
 		this.viewCnt = viewCnt;
 	}
-	public String[] getFiles() {
-		return files;
-	}
-	public void setFiles(String[] files) {
-		this.files = files;
-	}
+//	public String[] getFiles() {
+//		return files;
+//	}
+//	public void setFiles(String[] files) {
+//		this.files = files;
+//	}
 	public String getSecret() {
 		return secret;
 	}
@@ -90,7 +97,7 @@ public class BoardVO {
 	public String toString() {
 		return "BoardVO [bno=" + bno + ", replyCnt=" + replyCnt + ", viewCnt=" + viewCnt + ", purpose=" + purpose
 				+ ", title=" + title + ", content=" + content + ", writer=" + writer + ", secret=" + secret
-				+ ", regDate=" + regDate + ", modDate=" + modDate + ", files=" + Arrays.toString(files) + "]";
+				+ ", regDate=" + regDate + ", modDate=" + modDate + ", fileInfo=" + fileInfo + "]";
 	}
 		
 	

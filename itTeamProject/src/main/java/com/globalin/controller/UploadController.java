@@ -22,15 +22,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.globalin.domain.AttachFile;
-import com.globalin.domain.AttachmentVO;
+import com.globalin.domain.FileVO;
 
 import net.coobird.thumbnailator.Thumbnailator;
 
@@ -40,9 +38,6 @@ public class UploadController {
 
 	private Logger log = 
 			LoggerFactory.getLogger(UploadController.class);
-	
-	@Autowired
-	private String uploadPath;
 		
 	
 	// remove attached file
@@ -56,7 +51,8 @@ public class UploadController {
 		File file;
 		
 		try {
-			file = new File("c:\\temp\\" + URLDecoder.decode(fileName, "UTF-8"));
+			file = new File("c:\\temp\\"
+					+ URLDecoder.decode(fileName, "UTF-8"));
 			
 			// remove original files
 			file.delete();
@@ -82,14 +78,15 @@ public class UploadController {
 	
 	// Treat downloads request
 	@GetMapping(value="/download", 
-			produces= {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+			produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(String fileName) {
 		
 		log.info("Download files: " + fileName);
 		
 		// resource object for return
-		Resource resource = new FileSystemResource("c:\\temp\\" + fileName);
+		Resource resource = new FileSystemResource("c:\\temp\\"
+				+ fileName);
 		
 		String resourceName = resource.getFilename();
 		
@@ -117,7 +114,9 @@ public class UploadController {
 		// 이미지 데이터를 byte[] 배열로 전송
 		log.info("Transport a file: " + fileName);
 		
-		File file = new File("C:\\temp\\" + fileName);
+		File file = new File("c:\\temp\\"
+				+ fileName);
+		
 		ResponseEntity<byte[]> result = null;
 		
 		// byte[] 배열로 이미지 파일의 데이터를 브라우저에게 전송
@@ -127,7 +126,7 @@ public class UploadController {
 			
 			// 헤더에 content type 설정 정보 추가
 			header.add("Content-Type", Files.probeContentType(file.toPath()));
-			
+						
 			// file 객체를 byte 배열로 바꿔서 전송
 			result = new ResponseEntity<byte[]>(
 					FileCopyUtils.copyToByteArray(file),
@@ -154,13 +153,13 @@ public class UploadController {
 	
 	
 	@PostMapping(value="/uploadAjaxAction", 
-			produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<AttachFile>> 
+			produces= MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<FileVO>> 
 		uploadAjaxAction(MultipartFile[] uploadFile) {
-		log.info(uploadPath);
+		log.info("C:\\temp");
 		log.info("Upload by AJAX post");
 		
-		List<AttachFile> list = new ArrayList<>();
+		List<FileVO> list = new ArrayList<>();
 		
 		for(MultipartFile file: uploadFile) {
 			
@@ -172,16 +171,17 @@ public class UploadController {
 			
 			// 파일 객체 생성시, 저장할 위치, 파일 이름 필요
 			String uploadFileName = file.getOriginalFilename();
+			String uploadPath = "c:\\temp";
 			
 			UUID uuid = UUID.randomUUID();
 			
-			AttachFile attach = new AttachFile();
+			FileVO attach = new FileVO();
+			attach.setFileName(uploadFileName);
 			attach.setUuid(uuid.toString());
 			attach.setUploadPath(uploadPath);
 			
 			// 저장할 파일 이름에 uuid_filename 형식으로 저장
 			uploadFileName = uuid.toString() + "_" + uploadFileName;			
-			attach.setFileName(uploadFileName);
 			
 			File saveFile = new File(uploadPath, uploadFileName);
 			

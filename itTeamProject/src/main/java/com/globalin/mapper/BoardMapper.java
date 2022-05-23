@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.globalin.domain.BoardVO;
 import com.globalin.domain.Criteria;
+import com.globalin.domain.FileVO;
 
 // required sql for board
 public interface BoardMapper {
@@ -36,6 +37,9 @@ public interface BoardMapper {
 	// Update reply count
 	public void updateReplyCnt(@Param("bno") int bno,
 			@Param("amount") int amount);
+	
+	// 첨부파일 정보 저장
+	public void insertFile(FileVO fvo);
 		
 	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.globalin.domain.BoardVO;
 import com.globalin.domain.Criteria;
+import com.globalin.domain.FileVO;
 
 public interface BoardService {
 	
@@ -27,6 +28,9 @@ public interface BoardService {
 	
 	// Get total count at board
 	public int getTotal(Criteria cri);
+	
+	// insert file info
+	public void registerFile(FileVO fvo);
 	
 
 }

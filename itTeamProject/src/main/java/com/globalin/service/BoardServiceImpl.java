@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.globalin.domain.BoardVO;
 import com.globalin.domain.Criteria;
+import com.globalin.domain.FileVO;
 import com.globalin.mapper.BoardMapper;
 
 @Service
@@ -98,6 +99,16 @@ public class BoardServiceImpl implements BoardService {
 		log.info("Get total count of board");
 		
 		return mapper.getTotalCount(cri);
+		
+	}
+	
+	
+	@Override
+	public void registerFile(FileVO fvo) {
+		// TODO Auto-generated method stub
+		log.info("Register file info: " + fvo);
+		
+		mapper.insertFile(fvo);
 		
 	}
 	

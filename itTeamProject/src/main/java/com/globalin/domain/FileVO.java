@@ -1,12 +1,28 @@
 package com.globalin.domain;
 
+import java.sql.Date;
+
 // 게시판 파일 업로드 정보 저장
 public class FileVO {
 
+	private int bno;
 	private String fileName, uploadPath, uuid;
-	private boolean image;
+	private boolean imageCheck;
+	private Date regDate;
 	
 	
+	public Date getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+	public int getBno() {
+		return bno;
+	}
+	public void setBno(int bno) {
+		this.bno = bno;
+	}
 	public String getFileName() {
 		return fileName;
 	}
@@ -25,18 +41,18 @@ public class FileVO {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public boolean isImage() {
-		return image;
+	public boolean isImageCheck() {
+		return imageCheck;
 	}
-	public void setImage(boolean image) {
-		this.image = image;
+	public void setImageCheck(boolean imageCheck) {
+		this.imageCheck = imageCheck;
 	}
 	
 	
 	@Override
 	public String toString() {
-		return "FileVO [fileName=" + fileName + ", uploadPath=" + uploadPath + ", uuid=" + uuid + ", image=" + image
-				+ "]";
+		return "FileVO [bno=" + bno + ", fileName=" + fileName + ", uploadPath=" + uploadPath + ", uuid=" + uuid
+				+ ", imageCheck=" + imageCheck + ", regDate=" + regDate + "]";
 	}	
 	
 	

@@ -97,25 +97,26 @@ COMMIT;
 
 
 -- Creat table for attachment
-CREATE TABLE tbl_attachment(
-	filename VARCHAR2(50) NOT NULL,
-    savePath VARCHAR2(500) NOT NULL,
-    uuid VARCHAR2(100) NOT NULL,
-	bno NUMBER(10) NOT NULL,
-    imgCheck VARCHAR2(3) NOT NULL,
-	regdate DATE DEFAULT SYSDATE
+CREATE TABLE tbl_file(
+    -- {uuid + filename + uploadpath + imagecheck + regdate}
+    -- + {uuid + filename + uploadpath + imagecheck + regdate}
+    -- ...
+	filename VARCHAR2(4000) NOT NULL,
+    bno NUMBER(10) NOT NULL
 );
 
 
 -- Set a primary key at tbl_attachment
-ALTER TABLE tbl_attachment
-ADD CONSTRAINT pk_attachment PRIMARY KEY (filename);
+ALTER TABLE tbl_file
+ADD CONSTRAINT pk_file PRIMARY KEY (filename);
 
 -- Set a Foreign key at tbl_attachment
-ALTER TABLE tbl_attachment
-ADD CONSTRAINT fk_attachment FOREIGN KEY (bno)
+ALTER TABLE tbl_file
+ADD CONSTRAINT fk_file FOREIGN KEY (bno)
 REFERENCES tbl_board (bno);
 
 
 COMMIT;
 
+
+DROP TABLE tbl_attachment;

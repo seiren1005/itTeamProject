@@ -1,9 +1,12 @@
 package com.globalin.controller;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.globalin.domain.BoardPage;
 import com.globalin.domain.BoardVO;
 import com.globalin.domain.Criteria;
+import com.globalin.domain.FileVO;
 import com.globalin.service.BoardService;
 
 @Controller
@@ -60,10 +64,18 @@ public class BoardController {
 	
 	// /board/register post request
 	@PostMapping("/register")
-	public String register(BoardVO bvo, RedirectAttributes rttr) {
+	public String register(BoardVO bvo, RedirectAttributes rttr, 
+			HttpServletRequest req) {
 		
 		log.info("register: " + bvo);
 		service.register(bvo);
+		
+		// 첨부파일
+		FileVO fvo = new FileVO();
+		
+		fvo.setFileName(req.getParameter("pathInput"));
+		fvo.setBno(bvo.getBno());
+		service.registerFile(fvo);
 		
 		// diposable storage object
 		rttr.addFlashAttribute("result", bvo.getBno());
@@ -131,6 +143,11 @@ public class BoardController {
 		rttr.addAttribute("cri", cri);
 		
 		return "redirect:/board/list";
+		
+	}
+	
+	@GetMapping("/test")
+	public void move() {
 		
 	}
 	

@@ -73,6 +73,14 @@
 	<!-- /.Implement insert method at BoardMapper interface -->
 	
 	
+	<!-- 첨부파일 정보 추가 -->
+	<insert id="insertFile">
+		INSERT INTO tbl_file(filename, bno)
+		VALUES(#{fileName}, #{bno})
+	</insert>	
+	<!-- /.첨부파일 정보 추가 -->
+	
+	
 	<!-- Implement insertSelectKey method at BoardMapper interface -->
 	<insert id="insertSelectKey">
 		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
@@ -174,8 +182,7 @@
 		UPDATE tbl_board
 		SET replycnt = replycnt + #{amount}
 		WHERE bno = #{bno}
-	</update>
-	
+	</update>	
 	<!-- /.update updateReplyCnt -->
 
 </mapper>
