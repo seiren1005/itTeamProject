@@ -35,5 +35,30 @@ public class HomeController {
 		
 		return "home";
 	}
+	@RequestMapping(value="/board/list")
+	public String list() {
+	return "/board/list";
+	}
+
+	@RequestMapping(value="/newfile")
+	public String newfile() {
+	return "newfile";
+	}
+	
+	@RequestMapping(value="/deteil/diteil-lifeCoding")
+	public String lifecoding() {
+	return "/deteil/diteil-lifeCoding";
+	}
+	
+	@RequestMapping(value="/deteil/diteil-TCP")
+	public String TCP() {
+	return "/deteil/diteil-TCP";
+	}
+
+	@RequestMapping(value="/deteil/diteil-Tohoho")
+	public String Tohoho() {
+	return "/deteil/diteil-Tohoho";
+	}
+	
 	
 }
