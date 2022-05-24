@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.globalin.bulletinmapper.BulletinBoardMapper">
+
+	<!-- SQL Statement for board -->
+	
+	<!-- SQL template -->
+	<!-- Template what was usually used -->
+	<sql id="criteria">
+	
+		<!-- Insert SQL according to searchType -->
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+		<!-- (SQL) AND ... -->
+		
+			<foreach item="searchType" collection="searchTypeArr">
+				<trim prefix="OR">
+				<!-- prefix 가 OR 이기 때문에 아래의 조건을 하나라도 
+					만족할 경우 SQL 문은 (SQL) AND OR 로 시작하고
+					이러면 에러가 발생하기 때문에 위의 trim tag 에서 
+					prefixOverride 속성에 'OR' 값을 주어서 실행될 쿼리의
+					trim 문 안에 맨 앞에 지정한 문자열이 있으면 자동으로
+					지워줌-->				
+					<choose>
+						<!-- Search in title -->
+						<when test="searchType == 'T'.toString()">
+							title LIKE '%'||#{keyword}||'%'		
+						</when>
+						
+						<!-- Search in content -->
+						<when test="searchType == 'C'.toString()">
+							content LIKE '%'||#{keyword}||'%'
+						</when>
+						
+						<!-- Search in writer -->
+						<when test="searchType == 'W'.toString()">
+						writer LIKE '%'||#{keyword } ||'%'
+						</when>						
+					</choose>									
+				</trim>
+			</foreach>
+		</trim>
+		
+		<!-- /.Insert SQL according to searchType -->
+		 
+	</sql>
+	
+	
+	<sql id="purposeCriteria">
+	
+		<!-- Insert SQL according to searchType -->
+		<if test="purpose != 'A'.toString()">
+			(purpose = #{purpose}) AND
+		</if>
+		<!-- /.Insert SQL according to searchType -->
+		 
+	</sql>
+	
+	
+	<sql id="secretCheck">
+		<if test="secret == 'yes'.toString()">
+			
+		</if>		
+	</sql>
+			
+	<!-- /.SQL template -->
+	
+	
+	<!-- Implement insert method at BoardMapper interface -->	
+	<insert id="insert">
+		INSERT INTO tbl_board(bno, purpose, title, content, writer, secret)
+		VALUES (seq_board.NEXTVAL, #{purpose}, #{title}, #{content}, #{writer}, #{secret})
+	</insert>
+	<!-- /.Implement insert method at BoardMapper interface -->
+	
+	
+	<!-- 첨부파일 정보 추가 -->
+	<insert id="insertFile">
+		INSERT INTO tbl_file(filename, bno)
+		VALUES(#{fileName}, #{bno})
+	</insert>	
+	<!-- /.첨부파일 정보 추가 -->
+	
+	
+	<!-- Implement insertSelectKey method at BoardMapper interface -->
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+		<!-- order "BEFORE" 가 선언된 tag 내의 sql 문에 우선순위를 줌 -->
+			SELECT seq_board.NEXTVAL
+			FROM dual
+			<!-- dual 은 가상 테이블 -->
+		</selectKey>
+		
+		INSERT INTO tbl_board(bno, purpose, title, content, writer, secret)
+		VALUES(#{bno}, #{purpose}, #{title}, #{content}, #{writer}, #{secret})
+	</insert>
+	
+	
+	<!-- Implement selectOne method at BoardMapper interface -->
+	<select id="selectOne" resultType="com.globalin.bulletindomain.BulletinBoardVO">
+		SELECT *
+		FROM tbl_board
+		WHERE bno = #{bno}	
+	</select>
+	<!-- /.Implement selectOne method at BoardMapper interface -->
+	
+	
+	<!-- Implement selectAll method at BoardMapper interface -->
+	<select id="selectAll" resultType="com.globalin.bulletindomain.BulletinBoardVO">
+		<![CDATA[
+			SELECT *
+			FROM tbl_board
+			WHERE bno > 0
+		]]>
+	</select>
+	<!-- /.Implement selectAll method at BoardMapper interface -->
+	
+	
+	<!-- Implement selectAll page processed method at BoardMapper interface -->
+	<select id="selectAllWithPage" resultType="com.globalin.bulletindomain.BulletinBoardVO">
+	<![CDATA[
+		SELECT bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
+		FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
+					rownum rn, bno, purpose, title, content, writer, secret, regdate, moddate, replycnt
+				FROM tbl_board
+				WHERE
+	]]>
+		<include refid="criteria"></include>
+		<include refid="purposeCriteria"></include>
+		
+	<![CDATA[	
+					(rownum <= #{pageNum} * #{amount}))
+		WHERE rn > (#{pageNum} - 1) * #{amount}			
+	]]>	
+	</select>	
+	<!-- /.Implement selectAll page processed method at BoardMapper interface -->
+	
+	
+	<!-- Get total count at board -->
+	<select id="getTotalCount" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM tbl_board	
+			WHERE
+		]]>
+		
+			<!-- Using template -->
+			<include refid="criteria"></include>
+			<include refid="purposeCriteria"></include>
+		
+		<![CDATA[
+					(bno > 0)
+		]]>
+	</select>
+	<!-- /.Get total count at board-->
+	
+	
+	<!-- Implement update method at BoardMapper interface -->
+	<update id="update">
+		UPDATE tbl_board
+		SET purpose = #{purpose},
+			title = #{title},
+			content = #{content},
+			writer = #{writer},
+			secret = #{secret},
+			moddate = SYSDATE
+		WHERE bno = #{bno}
+	</update>
+	<!-- /.Implement update method at BoardMapper interface -->
+	
+	
+	<!-- Implement delete method at BoardMapper interface -->
+	<delete id="delete">
+		DELETE
+		FROM tbl_board
+		WHERE bno = #{bno}
+	</delete>
+	<!-- /.Implement delete method at BoardMapper interface -->
+	
+		
+	<!-- update updateReplyCnt -->
+	<update id="updateReplyCnt">
+		UPDATE tbl_board
+		SET replycnt = replycnt + #{amount}
+		WHERE bno = #{bno}
+	</update>	
+	<!-- /.update updateReplyCnt -->
+
+</mapper>

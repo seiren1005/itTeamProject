@@ -36,8 +36,8 @@
 
 	
 	<!-- Make a particular path for mybatis and component scan -->
-	<mybatis-spring:scan base-package="com.globalin.mapper"/>
-	<context:component-scan base-package="com.globalin.service"></context:component-scan>
+	<mybatis-spring:scan base-package="com.globalin.bulletinmapper"/>
+	<context:component-scan base-package="com.globalin.bulletinservice"></context:component-scan>
 	<!-- /.Make a particular path for mybatis and component scan -->
 		
 	
@@ -46,11 +46,5 @@
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	<!-- /.Set transaction and aop to using annotation -->
 	
-	
-	<!-- Set file upload path -->
-	<bean id="uploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\park\\Documents\\gits\\itTeamProject\\itTeamProject\\src\\main\\webapp\\resources\\upload">
-		</constructor-arg>
-	</bean>
 	
 </beans>

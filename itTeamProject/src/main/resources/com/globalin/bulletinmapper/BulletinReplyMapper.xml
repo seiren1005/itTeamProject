@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.globalin.bulletinmapper.BulletinReplyMapper">
+	
+	<!-- insert method at ReplyMapper -->
+	<insert id="insert">
+		INSERT INTO tbl_reply(rno, bno, reply, replyer)
+		VALUES(seq_reply.NEXTVAL, #{bno}, #{reply}, #{replyer})
+	</insert>	
+	<!-- /.insert method at ReplyMapper -->
+	
+	
+	<!-- selectOne method at ReplyMapper -->
+	<select id="selectOne" resultType="com.globalin.bulletindomain.BulletinReplyVO">
+		SELECT *
+		FROM tbl_reply
+		WHERE rno = #{rno}
+	</select>
+	<!-- /.selectOne method at ReplyMapper -->
+	
+	
+	<!-- selectAllWithPaging method at ReplyMapper -->
+	<select id="selectAllWithPaging" resultType="com.globalin.bulletindomain.BulletinReplyVO">
+		<![CDATA[
+			SELECT rno, bno, reply, replyer, replyregdate, replymoddate, adoption
+			FROM (SELECT /*+ INDEX(tbl_reply pk_reply) */
+						rownum rn, rno, bno, reply, replyer, replyregdate, replymoddate, adoption
+					FROM tbl_reply
+					WHERE bno = #{bno}
+								AND rno > 0
+								AND rownum <= #{cri.pageNum} * #{cri.amount})
+			WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+		]]>
+	</select>
+	<!-- /.selectAllWithPaging method at ReplyMapper -->
+	
+	
+	<!-- update method at ReplyMapper -->
+	<update id="update">
+		UPDATE tbl_reply
+		SET reply = #{reply}, 
+			replymoddate = SYSDATE,
+			adoption = #{adoption}					
+		WHERE rno = #{rno}
+	</update>	
+	<!-- /.update method at ReplyMapper -->
+	
+	
+	<!-- delete method at ReplyMapper -->
+	<delete id="delete">
+		DELETE
+		FROM tbl_reply
+		WHERE rno = #{rno}
+	</delete>
+	<!-- /.delete method at ReplyMapper -->
+	
+	
+	<!-- getCountReplyByBno method at ReplyMapper -->
+	<select id="getCountReplyByBno" resultType="int">
+		SELECT COUNT(rno)
+		FROM tbl_reply
+		WHERE bno = #{bno}
+	</select>
+	<!-- /.getCountReplyByBno method at ReplyMapper -->
+	
+	
+	<!-- 답변 선택 여부 -->
+	<select id="checkAdoption" resultType="int">
+		SELECT COUNT(adoption)
+		FROM tbl_reply
+		WHERE (bno = #{bno})
+				AND adoption IS NOT NULL
+	</select>
+	
+	<!-- /.답변 선택 여부 -->
+	
+
+</mapper>
